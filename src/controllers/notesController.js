@@ -1,4 +1,4 @@
-import {Note} from '../models/note.js';
+import { Note } from '../models/note.js';
 import createHttpError from 'http-errors';
 
 export const getAllNotes = async (req, res) => {
@@ -6,45 +6,50 @@ export const getAllNotes = async (req, res) => {
 
   res.status(200).json({
     status: 200,
-    data: notes
+    data: notes,
   });
 };
-export const getNoteById = async (req, res) => {
-  const id_param = req.params.noteId;
-  const note = await Note.findById(id_param);
-  if(!note){
-    // eslint-disable-next-line no-undef
-    next(createHttpError(404, 'Student not found'));
+
+export const getNoteById = async (req, res, next) => {
+  const { noteId } = req.params;
+  const note = await Note.findById(noteId);
+
+  if (!note) {
+    next(createHttpError(404, 'Note not found'));
     return;
   }
+
   res.status(200).json({
     status: 200,
-    data: note
+    data: note,
   });
 };
 
 export const createNote = async (req, res) => {
   const note = await Note.create(req.body);
-  res.status(201).json(note);
-};
 
-
-export const deleteNote = async (req, res) => {
-  const id_param = req.params.noteId;
-  const note = await Note.findOneAndDelete({_id: id_param});
-  if(!note){
-    // eslint-disable-next-line no-undef
-    next(createHttpError(404, 'Student not found'));
-    return;
-  }
-  res.status(200).json({
-    status: 200,
-    data: note
+  res.status(201).json({
+    status: 201,
+    data: note,
   });
 };
 
+export const deleteNote = async (req, res, next) => {
+  const { noteId } = req.params;
+  const note = await Note.findOneAndDelete({ _id: noteId });
 
-export const updateNote  = async (req, res, next) => {
+  if (!note) {
+    next(createHttpError(404, 'Note not found'));
+    return;
+  }
+
+  res.status(200).json({
+    status: 200,
+    data: note,
+  });
+};
+
+export const updateNote = async (req, res, next) => {
   const { noteId } = req.params;
 
   const note = await Note.findOneAndUpdate(
@@ -54,9 +59,12 @@ export const updateNote  = async (req, res, next) => {
   );
 
   if (!note) {
-    next(createHttpError(404, 'Student not found'));
+    next(createHttpError(404, 'Note not found'));
     return;
   }
 
-  res.status(200).json(note);
+  res.status(200).json({
+    status: 200,
+    data: note,
+  });
 };
