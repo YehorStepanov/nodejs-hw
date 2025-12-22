@@ -1,5 +1,7 @@
 import { connectMongoDB } from './db/connectMongoDB.js';
 import express from 'express';
+import cookieParser from 'cookie-parser';
+import authRoutes from './routes/authRoutes.js';
 import cors from 'cors';
 import {errorHandler} from './middleware/errorHandler.js';
 import 'dotenv/config';
@@ -14,8 +16,15 @@ const PORT = process.env.PORT ?? 3000;
 
 app.use(logger);
 app.use(express.json());
-app.use(cors());
 
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
+
+app.use(cookieParser());
+
+app.use(authRoutes);
 app.use(notesRoutes);
 
 app.use(notFoundHandler);
@@ -27,5 +36,3 @@ await connectMongoDB();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
