@@ -2,6 +2,7 @@ import { connectMongoDB } from './db/connectMongoDB.js';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import cors from 'cors';
 import {errorHandler} from './middleware/errorHandler.js';
 import 'dotenv/config';
@@ -25,6 +26,7 @@ app.use(cors({
 app.use(cookieParser());
 
 app.use(authRoutes);
+app.use(userRoutes);
 app.use(notesRoutes);
 
 app.use(notFoundHandler);
