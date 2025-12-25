@@ -5,6 +5,7 @@ const notesSchema = new Schema(
     title : { type: String, required: true, trim: true},
     content : { type: String, default: '', trim: true},
     tag : { type: String, default: 'Todo' , enum: TAGS},
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
     versionKey: false,
@@ -14,4 +15,4 @@ const notesSchema = new Schema(
 
 notesSchema.index({ title: 'text', content: 'text' });
 
-export const Note = model('note', notesSchema);
+export const Note = model('Note', notesSchema);
